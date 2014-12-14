@@ -171,11 +171,46 @@ stepsMedianNew <- median(stepsPerDay)
 
 **Median** ---> 10395
 
+There is no change in the result as compared to the first part of the assignment. This shows replacing 0s is not a good strategy for filling up the NA values.
 
 
 =========================================================================
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+Creating new factor variable with corresponding weekdays.
+
+
+```r
+days <- weekdays(as.Date(newActData$date))
+for(i in seq_along(days)){ 
+     if(days[i] %in% c("Saturday","Sunday"))
+          days[i]<- c("weekend")
+     else
+          days[i]<- c("weekday")
+}
+days <- as.factor(days)
+newActData <- cbind(newActData, days=days)
+```
+
+Creating plot
+
+
+```r
+weekdaysSubset <- newActData[newActData$days %in% c("weekday"),c(1,3)]
+weekendsSubset <- newActData[newActData$days %in% c("weekend"),c(1,3)]
+avgStepsWeekdays <- tapply(weekdaysSubset$steps, weekdaysSubset$interval, mean)
+avgStepsWeekends <- tapply(weekendsSubset$steps, weekendsSubset$interval, mean)
+plot(avgStepsWeekdays, type='l', main="Average Daily Activity Pattern (Weekdays)", xlab="5-min interval count", ylab="Number of steps")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-11-1.png) 
+
+```r
+plot(avgStepsWeekends, type='l', main="Average Daily Activity Pattern (Weekends)", xlab="5-min interval count", ylab="Number of steps")
+```
+
+![](PA1_template_files/figure-html/unnamed-chunk-11-2.png) 
 
 
 =========================================================================
